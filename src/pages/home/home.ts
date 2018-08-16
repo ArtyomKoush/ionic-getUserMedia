@@ -68,36 +68,36 @@ export class HomePage {
   }
 
   private startVideoStream() {
-    // navigator.getUserMedia({ audio: true, video: { width: 500, height: 500 } },
-    //   function(stream) {
-    //     console.log("Im streaming!!", stream);
-    //     var video = document.querySelector('video');
-    //     console.log("video element", video);
-    //     video.src = window.URL.createObjectURL(stream);
-    //     video.onloadedmetadata = function(e) {
-    //       console.log("stream start");
-    //       video.play();
-    //     };
-    //   },
-    //   function(err) {
-    //     console.log(err);
-    //     console.log("The following error occurred: " + err.name);
-    //   }
-    // );
+    cordova.plugins.iosrtc.getUserMedia({ audio: true, video: { width: 500, height: 500 } },
+      function(stream) {
+        console.log("Im streaming!!", stream);
+        var video = document.querySelector('video');
+        console.log("video element", video);
+        video.src = window.URL.createObjectURL(stream);
+        video.onloadedmetadata = function(e) {
+          console.log("stream start");
+          video.play();
+        };
+      },
+      function(err) {
+        console.log(err);
+        console.log("The following error occurred: " + err.name);
+      }
+    );
 
-    return getUserMedia({ audio: true, video: { width: 500, height: 500 } }).then((stream) => {
-      console.log("Im streaming!!", stream);
-      var video = document.querySelector('video');
-      console.log("video element", video);
-      video.src = window.URL.createObjectURL(stream);
-      video.onloadedmetadata = function(e) {
-        console.log("stream start");
-        video.play();
-      };
-    }).catch((err) => {
-      console.log(err);
-      console.log("The following error occurred: " + err.name);
-    });
+    // return getUserMedia({ audio: true, video: { width: 500, height: 500 } }).then((stream) => {
+    //   console.log("Im streaming!!", stream);
+    //   var video = document.querySelector('video');
+    //   console.log("video element", video);
+    //   video.src = window.URL.createObjectURL(stream);
+    //   video.onloadedmetadata = function(e) {
+    //     console.log("stream start");
+    //     video.play();
+    //   };
+    // }).catch((err) => {
+    //   console.log(err);
+    //   console.log("The following error occurred: " + err.name);
+    // });
   }
 
 }
