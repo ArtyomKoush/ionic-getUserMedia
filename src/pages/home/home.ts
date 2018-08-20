@@ -25,7 +25,7 @@ export class HomePage {
     // this.startVideoStream();
 
     this.platform.ready().then(() => {
-      //Ask for a camera permission
+      // Ask for a camera permission if needed
       this.diagnostic.isCameraAvailable().then((status) => {
         console.log("Is camera available", status);
 
@@ -44,7 +44,7 @@ export class HomePage {
   }
 
   private requestMicrophoneAndStartStream() {
-    //Ask for a microphone permission
+    // Ask for a microphone permission if needed
     this.diagnostic.isMicrophoneAuthorized().then((status) => {
       console.log('Is microphone available:', status);
 
