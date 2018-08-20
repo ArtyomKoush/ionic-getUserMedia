@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-// import { AndroidPermissions } from '@ionic-native/android-permissions';
 import { Diagnostic } from '@ionic-native/diagnostic';
-import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { Platform } from 'ionic-angular';
 import * as getUserMedia from 'get-user-media-promise';
 
@@ -18,16 +16,16 @@ export class HomePage {
 
   constructor(
     public navCtrl: NavController,
-    // private androidPermissions: AndroidPermissions,
     private diagnostic: Diagnostic,
-    private inAppBrowser: InAppBrowser,
     private platform: Platform
   ) { }
 
   ionViewDidLoad() {
+    // Uncomment this for in-browser test
     // this.startVideoStream();
 
     this.platform.ready().then(() => {
+      //Ask for a camera permission
       this.diagnostic.isCameraAvailable().then((status) => {
         console.log("Is camera available", status);
 
@@ -39,20 +37,14 @@ export class HomePage {
             this.requestMicrophoneAndStartStream();
           });
         }
-      }).catch((er) => {
-        console.log("Is camera available error", er);
+      }).catch((err) => {
+        console.log("Is camera available error", err);
       });
     });
-
-    // this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.CAMERA).then((res) => {
-    //   console.log("Permissions response:", res);
-    //   this.startVideoStream();
-    // }).catch((er) => {
-    //   console.log("Permissions error:", er);
-    // });
   }
 
   private requestMicrophoneAndStartStream() {
+    //Ask for a microphone permission
     this.diagnostic.isMicrophoneAuthorized().then((status) => {
       console.log('Is microphone available:', status);
 
@@ -68,36 +60,37 @@ export class HomePage {
   }
 
   private startVideoStream() {
-    cordova.plugins.iosrtc.getUserMedia({ audio: true, video: { width: 500, height: 500 } },
-      function(stream) {
-        console.log("Im streaming!!", stream);
-        var video = document.querySelector('video');
-        console.log("video element", video);
-        video.src = window.URL.createObjectURL(stream);
-        video.onloadedmetadata = function(e) {
-          console.log("stream start");
-          video.play();
-        };
-      },
-      function(err) {
-        console.log(err);
-        console.log("The following error occurred: " + err.name);
-      }
-    );
+    // Ios solution using iosrtc plugin
+    // cordova.plugins.iosrtc.getUserMedia({ audio: true, video: { width: 500, height: 500 } },
+    //   function(stream) {
+    //     console.log("Im streaming!!", stream);
+    //     var video = document.querySelector('video');
+    //     console.log("video element", video);
+    //     video.src = window.URL.createObjectURL(stream);
+    //     video.onloadedmetadata = function(e) {
+    //       console.log("stream start");
+    //       video.play();
+    //     };
+    //   },
+    //   function(err) {
+    //     console.log("The following error occurred: " + err);
+    //   }
+    // );
 
-    // return getUserMedia({ audio: true, video: { width: 500, height: 500 } }).then((stream) => {
-    //   console.log("Im streaming!!", stream);
-    //   var video = document.querySelector('video');
-    //   console.log("video element", video);
-    //   video.src = window.URL.createObjectURL(stream);
-    //   video.onloadedmetadata = function(e) {
-    //     console.log("stream start");
-    //     video.play();
-    //   };
-    // }).catch((err) => {
-    //   console.log(err);
-    //   console.log("The following error occurred: " + err.name);
-    // });
+    // Android and in-browser solution using get-user-media-promise lib to use
+    // promises instead of native callback implementation
+    return getUserMedia({ audio: true, video: { width: 500, height: 500 } }).then((stream) => {
+      console.log("Im streaming!!", stream);
+      var video = document.querySelector('video');
+      console.log("video element", video);
+      video.src = window.URL.createObjectURL(stream);
+      video.onloadedmetadata = function(e) {
+        console.log("stream start");
+        video.play();
+      };
+    }).catch((err) => {
+      console.log("The following error occurred: " + err);
+    });
   }
 
 }
